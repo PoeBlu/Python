@@ -28,7 +28,7 @@ def number_of_divisors(n):
     while n % 2 == 0:
         temp += 1
         n = int(n / 2)
-    div = div * (temp)
+    div *= temp
 
     for i in range(3, int(math.sqrt(n)) + 1, 2):
         temp = 1

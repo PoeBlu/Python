@@ -126,7 +126,7 @@ class SmoSVM(object):
             # 4:  update error value,here we only calculate those non-bound samples' error
             self._unbound = [i for i in self._all_samples if self._is_unbound(i)]
             for s in self.unbound:
-                if s == i1 or s == i2:
+                if s in [i1, i2]:
                     continue
                 self._error[s] += (
                     y1 * (a1_new - a1) * K(i1, s)
@@ -186,14 +186,10 @@ class SmoSVM(object):
             2:sample[index] is bound,Use predicted value deduct true value: g(xi) - yi
 
         """
-        # get from error data
         if self._is_unbound(index):
             return self._error[index]
-        # get by g(xi) - yi
-        else:
-            gx = np.dot(self.alphas * self.tags, self._K_matrix[:, index]) + self._b
-            yi = self.tags[index]
-            return gx - yi
+        gx = np.dot(self.alphas * self.tags, self._K_matrix[:, index]) + self._b
+        return gx - self.tags[index]
 
     # Calculate Kernel matrix of all possible i1,i2 ,saving time
     def _calculate_k_matrix(self):
@@ -208,7 +204,7 @@ class SmoSVM(object):
     # Predict test sample's tag
     def _predict(self, sample):
         k = self._k
-        predicted_value = (
+        return (
             np.sum(
                 [
                     self.alphas[i1] * self.tags[i1] * k(i1, sample)
@@ -217,7 +213,6 @@ class SmoSVM(object):
             )
             + self._b
         )
-        return predicted_value
 
     # Choose alpha1 and alpha2
     def _choose_alphas(self):
@@ -376,21 +371,13 @@ class SmoSVM(object):
             self._min = np.min(data, axis=0)
             self._max = np.max(data, axis=0)
             self._init = False
-            return (data - self._min) / (self._max - self._min)
-        else:
-            return (data - self._min) / (self._max - self._min)
+        return (data - self._min) / (self._max - self._min)
 
     def _is_unbound(self, index):
-        if 0.0 < self.alphas[index] < self._c:
-            return True
-        else:
-            return False
+        return 0.0 < self.alphas[index] < self._c
 
     def _is_support(self, index):
-        if self.alphas[index] > 0:
-            return True
-        else:
-            return False
+        return self.alphas[index] > 0
 
     @property
     def unbound(self):
@@ -424,9 +411,8 @@ class Kernel(object):
         return np.exp(-1 * (self.gamma * np.linalg.norm(v1 - v2) ** 2))
 
     def _check(self):
-        if self._kernel == self._rbf:
-            if self.gamma < 0:
-                raise ValueError("gamma value must greater than 0")
+        if self._kernel == self._rbf and self.gamma < 0:
+            raise ValueError("gamma value must greater than 0")
 
     def _get_kernel(self, kernel_name):
         maps = {"linear": self._linear, "poly": self._polynomial, "rbf": self._rbf}
@@ -493,18 +479,10 @@ def test_cancel_data():
     mysvm.fit()
     predict = mysvm.predict(test_samples)
 
-    # 5: check accuracy
-    score = 0
     test_num = test_tags.shape[0]
-    for i in range(test_tags.shape[0]):
-        if test_tags[i] == predict[i]:
-            score += 1
-    print(
-        "\r\nall: {}\r\nright: {}\r\nfalse: {}".format(
-            test_num, score, test_num - score
-        )
-    )
-    print("Rough Accuracy: {}".format(score / test_tags.shape[0]))
+    score = sum(test_tags[i] == predict[i] for i in range(test_tags.shape[0]))
+    print(f"\r\nall: {test_num}\r\nright: {score}\r\nfalse: {test_num - score}")
+    print(f"Rough Accuracy: {score / test_tags.shape[0]}")
 
 
 def test_demonstration():

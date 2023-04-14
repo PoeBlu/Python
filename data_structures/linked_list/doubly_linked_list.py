@@ -78,4 +78,4 @@ class Link:
         self.value = x
 
     def displayLink(self):
-        print("{}".format(self.value), end=" ")
+        print(f"{self.value}", end=" ")

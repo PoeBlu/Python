@@ -41,9 +41,7 @@ def euclidean_distance(q, p):
 
     if len(q) != 2 or len(p) != 2:
         raise ValueError(
-            "expected dimensions to be 2-d, instead got p:{} and q:{}".format(
-                len(q), len(p)
-            )
+            f"expected dimensions to be 2-d, instead got p:{len(q)} and q:{len(p)}"
         )
 
     for num in q + p:
@@ -148,10 +146,10 @@ def plot_cluster(db, clusters, ax):
         temp.append(stack)
 
     color = iter(plt.cm.rainbow(np.linspace(0, 1, len(clusters))))
-    for i in range(0, len(temp)):
+    for item in temp:
         c = next(color)
-        x = [l[0] for l in temp[i]]
-        y = [l[1] for l in temp[i]]
+        x = [l[0] for l in item]
+        y = [l[1] for l in item]
         ax.plot(x, y, "ro", c=c)
 
     x = [l[0] for l in noise]

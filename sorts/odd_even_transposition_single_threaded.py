@@ -7,7 +7,7 @@ is no better than bubble sort.
 
 
 def OddEvenTransposition(arr):
-    for i in range(0, len(arr)):
+    for i in range(len(arr)):
         for i in range(i % 2, len(arr) - 1, 2):
             if arr[i + 1] < arr[i]:
                 arr[i], arr[i + 1] = arr[i + 1], arr[i]
@@ -18,10 +18,7 @@ def OddEvenTransposition(arr):
 
 # creates a list and sorts it
 def main():
-    list = []
-
-    for i in range(10, 0, -1):
-        list.append(i)
+    list = list(range(10, 0, -1))
     print("Initial List")
     print(*list)
 

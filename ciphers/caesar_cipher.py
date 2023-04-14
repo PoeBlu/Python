@@ -19,17 +19,15 @@ def decrypt(strng, key):
 
 
 def brute_force(strng):
-    key = 1
     decrypted = ""
-    while key <= 94:
+    for key in range(1, 95):
         for x in strng:
             indx = (ord(x) - key) % 256
             if indx < 32:
                 indx = indx + 95
             decrypted = decrypted + chr(indx)
-        print("Key: {}\t| Message: {}".format(key, decrypted))
+        print(f"Key: {key}\t| Message: {decrypted}")
         decrypted = ""
-        key += 1
     return None
 
 

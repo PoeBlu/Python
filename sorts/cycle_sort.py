@@ -3,7 +3,7 @@ def cycle_sort(array):
     ans = 0
 
     # Pass through the array to find cycles to rotate.
-    for cycleStart in range(0, len(array) - 1):
+    for cycleStart in range(len(array) - 1):
         item = array[cycleStart]
 
         # finding the position for putting the item.
@@ -48,5 +48,5 @@ if __name__ == "__main__":
     cycle_sort(unsorted)
 
     print("After sort : ")
-    for i in range(0, n):
+    for i in range(n):
         print(unsorted[i], end=" ")

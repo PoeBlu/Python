@@ -10,15 +10,9 @@ def find_lcm(num_1, num_2):
        >>> find_lcm(12,76)
        228
     """
-    if num_1 >= num_2:
-        max_num = num_1
-    else:
-        max_num = num_2
-
+    max_num = num_1 if num_1 >= num_2 else num_2
     lcm = max_num
-    while True:
-        if (lcm % num_1 == 0) and (lcm % num_2 == 0):
-            break
+    while lcm % num_1 != 0 or lcm % num_2 != 0:
         lcm += max_num
     return lcm
 

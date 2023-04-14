@@ -3,8 +3,7 @@
 
 def average(nums):
     """Find mean of a list of numbers."""
-    avg = sum(nums) / len(nums)
-    return avg
+    return sum(nums) / len(nums)
 
 
 def main():
